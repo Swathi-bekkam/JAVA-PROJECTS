@@ -78,25 +78,28 @@ public class Sender implements ActionListener{
         p.add(status);
 
         c=new JPanel();
-        c.setBounds(5,85,490,550);
+      
+        c.setBounds(5,85,490,450);
         f.add(c);
 
         text=new JTextField();
-        text.setBounds(5,640,380,55);
+        
+         text.setBounds(5,540,380,55);
         text.setFont(new Font("SAN_SERIF",Font.PLAIN,16));
         f.add(text);
        
 
         JButton send=new JButton("Send");
-        send.setBounds(390,640,100,55);
+       
+        send.setBounds(390,540,100,55);
         send.setBackground(new Color(7,94,84));
         send.setFont(new Font("SAN_SERIF",Font.PLAIN,16));
         send.setForeground(Color.WHITE);
         f.add(send);
         send.addActionListener(this);
 
-        f.setSize(500, 700);
-        f.setLocation(300,200);
+        f.setSize(500, 600);
+       //f.setLocation(300,200);
         f.setUndecorated(true);
         f.getContentPane().setBackground(Color.LIGHT_GRAY);
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -153,24 +156,28 @@ public class Sender implements ActionListener{
     public static void main(String[] args) {
         new Sender();
         try {
-            Socket s=new Socket("127.0.0.1",6001);
-             DataInputStream din=new DataInputStream(s.getInputStream());
+               
+            ServerSocket skt=new ServerSocket(6001);
+            while(true){
+                Socket s=skt.accept();
+                DataInputStream din=new DataInputStream(s.getInputStream());
                 dout=new DataOutputStream(s.getOutputStream());
+                //dout=new DataOutputStream(s.getOutputStream());
 
                 while(true){
-                    
                     String msg=din.readUTF();
                     JPanel panel=FormatLabel(msg);
 
                     JPanel left=new JPanel(new BorderLayout());
                     left.add(panel,BorderLayout.LINE_START);
                     vertical.add(left);
-                    vertical.add(Box.createVerticalStrut(15));
-                    c.add(vertical,BorderLayout.PAGE_START);
                     f.validate();
                 }
-        } catch (Exception e) {
-            e.printStackTrace();
+            }
+        }
+        catch(Exception e){
+           // e.printStackTrace();
+           e.printStackTrace();
         }
     }
 }

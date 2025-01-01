@@ -10,7 +10,7 @@ import javax.swing.border.*;
 public class Receiver implements ActionListener{
     static JFrame f=new JFrame();
     JTextField text;
-    JPanel c;
+    static JPanel c;
     static Box vertical=Box.createVerticalBox();
     static DataOutputStream dout;
 
@@ -78,25 +78,25 @@ public class Receiver implements ActionListener{
         p.add(status);
 
         c=new JPanel();
-        c.setBounds(5,85,490,550);
+        c.setBounds(5,85,490,450);
         f.add(c);
 
         text=new JTextField();
-        text.setBounds(5,640,380,55);
-        text.setFont(new Font("SAN_SERIF",Font.PLAIN,16));
+        text.setBounds(5,540,380,55);
+        text.setFont(new Font("SAN_SERIF",Font.PLAIN,15));
         f.add(text);
        
 
         JButton send=new JButton("Send");
-        send.setBounds(390,640,100,55);
+        send.setBounds(390,540,100,55);
         send.setBackground(new Color(7,94,84));
         send.setFont(new Font("SAN_SERIF",Font.PLAIN,16));
         send.setForeground(Color.WHITE);
         f.add(send);
         send.addActionListener(this);
 
-        f.setSize(500, 700);
-        f.setLocation(1000,200);
+        f.setSize(500, 600);
+       f.setLocation(1000,0);
         f.setUndecorated(true);
         f.getContentPane().setBackground(Color.LIGHT_GRAY);
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -153,22 +153,24 @@ public class Receiver implements ActionListener{
         new Receiver();
 
          try{
-            ServerSocket skt=new ServerSocket(6001);
-            while(true){
-                Socket s=skt.accept();
+            Socket s=new Socket("127.0.0.1",6001);
                 DataInputStream din=new DataInputStream(s.getInputStream());
                 dout=new DataOutputStream(s.getOutputStream());
 
                 while(true){
+                    c.setLayout(new BorderLayout());
                     String msg=din.readUTF();
                     JPanel panel=FormatLabel(msg);
 
                     JPanel left=new JPanel(new BorderLayout());
                     left.add(panel,BorderLayout.LINE_START);
                     vertical.add(left);
+
+                    vertical.add(Box.createVerticalStrut(15));
+                    c.add(vertical,BorderLayout.PAGE_START);
                     f.validate();
                 }
-            }
+            
         }
         catch(Exception e){
            // e.printStackTrace();
